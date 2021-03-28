@@ -12,6 +12,7 @@ declare type samplerCube;
 
 type scalar is float;
 type angle is scalar;
+declare float PI;
 
 // Numeric Operator Types
 with float T: declare T +(T f1, T f2);
@@ -54,6 +55,7 @@ with float3 T: declare T *(T v1, T v2);
 with float3 T: with float U: declare T *(T v, U f);
 with float3 T: with float U: declare T *(U f, T v);
 with float3 T: with float U: declare T /(T f1, U f2);
+// with float3 T: with float U: declare U .x(T v);
 
 with float4 T: declare T +(T v1, T v2);
 with float4 T: declare T -(T v1, T v2);

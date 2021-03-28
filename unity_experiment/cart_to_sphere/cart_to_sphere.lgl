@@ -1,0 +1,18 @@
+#"#ifndef CART_TO_SPHERE_INCLUDED";
+#"#define CART_TO_SPHERE_INCLUDED";
+using "../hl_defs.lgl";
+
+with frame T:
+canon sphere3<T>.point CartToSphere(cart3<T>.point input) {
+     float y = sin(input[0] * PI);
+     float x = y * sin(input[1] * (PI * -2.0));
+     float z = y * sin((input[1] + 0.25) * (PI * 2.0));
+     y = sin((input[0] - 0.5) * PI);
+     return float3(x, y, z) as! sphere3<T>.point;
+}
+
+void CartToSphere_float(cart3<T>.point input, out float3 Out) {
+     Out = input in sphere3;
+}
+
+#"#endif";
