@@ -13,6 +13,7 @@ let num = ['0'-'9']+
 let letter = ['a'-'z' 'A'-'Z']
 let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 let s = ['"'] (['\"']|[ ^ '\r' '\n' '"' ])* ['"']
+let multi_s = [{|"""|}](['\"']|[ ^ '"'])* [{|"""|}]
 let floatval = ((['0'-'9']*['.']['0'-'9']+)|(['0'-'9']+['.']['0'-'9']*))
 let newline = ['\n' '\r']
 let comment = "//" [^ '\r' '\n']*
@@ -154,6 +155,7 @@ rule read = parse
   | id as id        { ID id }
   | floatval as fl  { FLOAT (float_of_string fl) }
   | eof             { EOF }
+  | multi_s as multi_s { STRING (String.sub s 3 (String.length s - 4)) }
   | _ as c  {
             let pos = lexbuf.Lexing.lex_curr_p in
             printf "Error at line %d\n" pos.Lexing.pos_lnum;
