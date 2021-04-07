@@ -1,6 +1,7 @@
-#"#ifndef GRAYSCALE_INCLUDED";
-#"#define GRAYSCALE_INCLUDED";
-
+#"""
+#ifndef GRAYSCALE_INCLUDED
+#define GRAYSCALE_INCLUDED
+""";
 using "../hl_defs.lgl";
 
 void Grayscale_float(float3 inp, out float result)
@@ -11,5 +12,6 @@ void Grayscale_float(float3 inp, out float result)
     result = (r + g + b) * 0.33;
 }
 
-
-#"#endif";
+#"""
+#endif
+""";

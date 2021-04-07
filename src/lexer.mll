@@ -13,10 +13,12 @@ let num = ['0'-'9']+
 let letter = ['a'-'z' 'A'-'Z']
 let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 let s = ['"'] (['\"']|[ ^ '\r' '\n' '"' ])* ['"']
-let multi_s = [{|"""|}](['\"']|[ ^ '"'])* [{|"""|}]
 let floatval = ((['0'-'9']*['.']['0'-'9']+)|(['0'-'9']+['.']['0'-'9']*))
 let newline = ['\n' '\r']
 let comment = "//" [^ '\r' '\n']*
+let multistring_st = "\"\"\"\n"
+let multistring_middle = [^ '\r' '\n']*
+let multistring_end = "\n\"\"\"" 
 let multiline_start = "/*"
 (* Handle one star at a time *)
 let multiline_middle = [^ '*' '\r' '\n']* | '*'
@@ -152,10 +154,10 @@ rule read = parse
   | "namespace" { raise (SyntaxError ("Cannot use reserved GLSL keyword " ^ Lexing.lexeme lexbuf)) }
   | num as num      { NUM (int_of_string num) }
   | s as s          { STRING (String.sub s 1 (String.length s - 2)) }
+  | multistring_st  { Lexing.new_line lexbuf; multistring "\n" lexbuf }
   | id as id        { ID id }
   | floatval as fl  { FLOAT (float_of_string fl) }
   | eof             { EOF }
-  | multi_s as multi_s { STRING (String.sub s 3 (String.length s - 4)) }
   | _ as c  {
             let pos = lexbuf.Lexing.lex_curr_p in
             printf "Error at line %d\n" pos.Lexing.pos_lnum;
@@ -167,3 +169,12 @@ and multicomment = parse
   | multiline_end   { read lexbuf }
   | newline         { Lexing.new_line lexbuf; multicomment lexbuf }
   | multiline_middle { multicomment lexbuf}
+
+and multistring string_acc = parse
+  | multistring_end { Lexing.new_line lexbuf; STRING (string_acc ^ "\n") }
+  | newline { Lexing.new_line lexbuf; multistring (string_acc ^ "\n") lexbuf }
+  | multiline_middle as s { multistring (string_acc ^ s) lexbuf }
+
+(* let multistring_st = "\"\"\"\n"
+let multistring_middle = [^ '\r' '\n']*
+let multistring_end = "\n\"\"\""  *)

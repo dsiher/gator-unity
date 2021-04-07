@@ -1,5 +1,7 @@
-#"#ifndef CART_TO_SPHERE_INCLUDED";
-#"#define CART_TO_SPHERE_INCLUDED";
+#"""
+#ifndef CART_TO_SPHERE_INCLUDED
+#define CART_TO_SPHERE_INCLUDED
+""";
 using "../hl_defs.lgl";
 
 with frame T:
@@ -15,4 +17,6 @@ void CartToSphere_float(cart3<T>.point input, out float3 Out) {
      Out = input in sphere3;
 }
 
-#"#endif";
+#"""
+#endif
+""";
